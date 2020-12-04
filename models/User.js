@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
   googleId: String,
+  credits: { type: Number, default: 0 },
 });
 
 // first arg is the name of the collection

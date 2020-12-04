@@ -31,26 +31,46 @@ passport.use(
       // use below option to trust proxy so it will use https
       proxy: true,
     },
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({ googleId: profile.id }).then((existingUser) => {
-        if (existingUser) {
-          // we already have a record with the profile ID
-          // for done() function; 1st arg is error object, 2nd arg is the user record
-          done(null, existingUser);
-        } else {
-          // we don't have a user record with this ID, make a new record
-          // profile {
-          //  id: '106761574932474166192',
-          //  displayName: 'Jason Chen',
-          //  ...
-          new User({ googleId: profile.id })
-            .save()
-            // the user below is a second instance(from DB),
-            // whereas the first instance was created
-            // in the line new User({ googleId: profile.id }) above
-            .then((user) => done(null, user));
-        }
-      });
+    async (accessToken, refreshToken, profile, done) => {
+      const existingUser = await User.findOne({ googleId: profile.id });
+
+      if (existingUser) {
+        // for done() function; 1st arg is error object, 2nd arg is the user record
+        return done(null, existingUser);
+      }
+
+      // profile {
+      //  id: '106761574932474166192',
+      //  displayName: 'Jason Chen',
+      //  ...
+      const user = await new User({ googleId: profile.id }).save();
+      // the user below is a second instance(from DB),
+      // whereas the first instance was created
+      // in the line new User({ googleId: profile.id }) above
+      done(null, user);
     }
   )
 );
+
+// Using Promises:
+// (accessToken, refreshToken, profile, done) => {
+//   User.findOne({ googleId: profile.id }).then((existingUser) => {
+//     if (existingUser) {
+//       // we already have a record with the profile ID
+//       // for done() function; 1st arg is error object, 2nd arg is the user record
+//       done(null, existingUser);
+//     } else {
+//       // we don't have a user record with this ID, make a new record
+//       // profile {
+//       //  id: '106761574932474166192',
+//       //  displayName: 'Jason Chen',
+//       //  ...
+//       new User({ googleId: profile.id })
+//         .save()
+//         // the user below is a second instance(from DB),
+//         // whereas the first instance was created
+//         // in the line new User({ googleId: profile.id }) above
+//         .then((user) => done(null, user));
+//     }
+//   });
+// }

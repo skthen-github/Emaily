@@ -18,11 +18,19 @@ module.exports = (app) => {
   // the GoogleStrategy passport can handle this
   // passport can see the code is inside the url so it can see that user
   // is attemptting to turn that code into a profile
-  app.get("/auth/google/callback", passport.authenticate("google"));
+  // third arg will be executed once the passport.authenticate("google") is executed,
+  // in such flow
+  app.get(
+    "/auth/google/callback",
+    passport.authenticate("google"),
+    (req, res) => {
+      res.redirect("/surveys");
+    }
+  );
 
   app.get("/api/logout", (req, res) => {
     req.logout();
-    res.send(req.user);
+    res.redirect("/");
   });
 
   app.get("/api/current_user", (req, res) => {
