@@ -5,6 +5,7 @@ const passport = require("passport");
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
 require("./models/User");
+require("./models/Survey");
 // this require statement only runs the code inside of passport.js
 // it does not return anything so no need to assign to a const
 require("./services/passport");
@@ -30,6 +31,7 @@ app.use(passport.session());
 
 require("./routes/authRoutes")(app);
 require("./routes/billingRoutes")(app);
+require("./routes/surveyRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
   // Express will serve up production assests

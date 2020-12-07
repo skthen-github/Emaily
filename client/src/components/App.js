@@ -2,30 +2,28 @@ import React, { Component } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../actions";
-
 import Header from "./Header";
 import Landing from "./Landing";
-const Dashboard = () => <h2>Dashboard</h2>;
-const SurveyNew = () => <h2>SurveyNew</h2>;
+import Dashboard from "./Dashboard";
+import SurveyNew from "./surveys/SurveyNew";
 
 class App extends Component {
   componentDidMount() {
     this.props.fetchUser();
   }
 
+  // BrowserRouter can only have one child component
+
   render() {
     return (
-      <div className="container">
-        {/* BrowserRouter can only have one child component */}
-        <BrowserRouter>
-          <div>
-            <Header />
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/surveys" component={Dashboard} />
-            <Route path="/surveys/new" component={SurveyNew} />
-          </div>
-        </BrowserRouter>
-      </div>
+      <BrowserRouter>
+        <div className="container">
+          <Header />
+          <Route exact path="/" component={Landing} />
+          <Route exact path="/surveys" component={Dashboard} />
+          <Route path="/surveys/new" component={SurveyNew} />
+        </div>
+      </BrowserRouter>
     );
   }
 }
